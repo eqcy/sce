@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SCE: Skill-Compositional Experts for Embodied Continual Learning.">
+  <title>SCE | Skill-Compositional Experts</title>
+  <link rel="icon" href="static/images/SCE_logo.png" type="image/png">
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="SCE home">
+      <img class="brand-mark" src="static/images/SCE_logo.png" alt="" aria-hidden="true">
+      <span>Skill-Compositional Experts</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#videos">Videos</a>
+      <a href="#analysis">Analysis</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Embodied Continual Learning</p>
+          <h1>Learning New Tasks via Reusable Skills: Skill-Compositional Experts for Embodied Continual Learning</h1>
+          <p class="lead">
+            SCE enables robots to continually acquire new tasks by decomposing demonstrations into reusable
+            skills and composing them through dual execution-and-transition experts.
+          </p>
+          <div class="authors">
+            <p>Shuaike Zhang<sup>1</sup>, Shaokun Wang<sup>1</sup>, Haoyu Tang<sup>2</sup>, Jianlong Wu<sup>1,3</sup>, Liqiang Nie<sup>1,3</sup></p>
+            <p><sup>1</sup>Harbin Institute of Technology (Shenzhen), Shenzhen, China<br><sup>2</sup>Shandong University, Jinan, China<br><sup>3</sup>Shenzhen Loop Area Institute, Shenzhen, China</p>
+          </div>
+          <div class="actions" aria-label="Project resources">
+            <span class="button primary disabled" aria-disabled="true">Paper coming soon</span>
+            <span class="button disabled" aria-disabled="true">Code coming soon</span>
+          </div>
+        </div>
+        <figure class="hero-figure">
+          <img src="static/images/Introduction.png" alt="Overview comparing embodied continual learning with reusable skill composition in SCE.">
+          <figcaption>
+            Closed-loop control amplifies the impact of old-task feature drift, while SCE composes new tasks from a
+            skill base.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="abstract" class="section">
+      <div class="container narrow">
+        <div class="section-heading">
+          <h2>Abstract</h2>
+        </div>
+        <p>
+          Embodied Continual Learning (ECL) aims to enable robots to continually acquire new manipulation tasks while
+          retaining previously learned behaviors under closed-loop control. Compared with conventional continual learning,
+          ECL suffers from more severe catastrophic forgetting. Feature drift accumulated under closed-loop control
+          progressively propagates through sequential decision-making, leading to degradation of previously learned
+          behaviors. A key challenge in ECL lies in structured skill reuse across continually evolving tasks, since existing
+          methods primarily focus on skill learning without explicitly organizing them for coherent task execution.
+        </p>
+        <p>
+          To address this issue, we propose SCE, a Skill-Compositional Experts framework for ECL. SCE builds a skill base
+          via Compositional Skill Grounding (CSG), which decomposes task demonstrations into reusable skills. Based on this,
+          Dual Execution-and-Transition Experts (DETE) enable new task learning through skill composition, where one branch
+          ensures skill execution and the other supports transitions between skills for coherent behavior. Experiments on
+          LIBERO benchmarks and real-world manipulation tasks demonstrate that SCE consistently improves retention and
+          overall task performance. Further feature drift analyses and ablation studies verify the effectiveness of our
+          method. The code and real-world datasets will be made publicly available.
+        </p>
+      </div>
+    </section>
+
+    <section id="method" class="section section-muted">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Method</p>
+          <h2>CSG builds the skill base; DETE composes skills</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="card-index">01</span>
+            <h3>Compositional Skill Grounding</h3>
+            <p>
+              CSG partitions each demonstration into temporally coherent segments using robot-state dynamics, then uses
+              VLM-grounded induction to assign skill labels and update the skill base.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="card-index">02</span>
+            <h3>Execution Expert Branch</h3>
+            <p>
+              DETE routes each input to a skill-specific expert through a skill distribution, giving each
+              skill dedicated capacity and reducing interference with unrelated skills.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span class="card-index">03</span>
+            <h3>Transition Expert Branch</h3>
+            <p>
+              A transition-aware router models cross-skill dependencies around skill boundaries, and adaptive fusion
+              balances execution and transition outputs during closed-loop action generation.
+            </p>
+          </article>
+        </div>
+        <figure class="paper-figure">
+          <img src="static/images/framework.png" alt="Overall SCE framework with CSG and DETE modules.">
+          <figcaption>
+            Overall framework of SCE. Demonstrations are decomposed into reusable skills, and DETE augments a pretrained
+            VLA action decoder for skill-specific execution and coherent cross-skill composition.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <div class="container">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Results</p>
+            <h2>Stronger retention and final success across simulation and real-world tasks</h2>
+          </div>
+          <p>
+            The reported metrics follow the paper protocol: FWT measures new-task performance, NBT measures forgetting
+            on previously learned tasks, AUC summarizes performance across stages, and Final SR reports final-stage
+            average success.
+          </p>
+        </div>
+
+        <div class="stat-grid" aria-label="SCE headline metrics">
+          <article class="stat-card">
+            <span>LIBERO-Goal</span>
+            <strong>83.4</strong>
+            <p>Final SR with 4.3 NBT and 82.5 AUC.</p>
+          </article>
+          <article class="stat-card">
+            <span>LIBERO-Long</span>
+            <strong>73.4</strong>
+            <p>Final SR with 0.5 NBT and 70.0 AUC.</p>
+          </article>
+          <article class="stat-card">
+            <span>Real World</span>
+            <strong>83.3</strong>
+            <p>Final SR with 0.0 NBT and 82.8 AUC.</p>
+          </article>
+        </div>
+
+        <div class="table-wrap" role="region" aria-label="Simulation results table" tabindex="0">
+          <table>
+            <caption>Main results under embodied continual learning</caption>
+            <thead>
+              <tr>
+                <th rowspan="2">Method</th>
+                <th colspan="4">LIBERO-Goal</th>
+                <th colspan="4">LIBERO-Long</th>
+              </tr>
+              <tr>
+                <th>FWT</th>
+                <th>NBT</th>
+                <th>AUC</th>
+                <th>Final SR</th>
+                <th>FWT</th>
+                <th>NBT</th>
+                <th>AUC</th>
+                <th>Final SR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sequential</td>
+                <td>81.2</td>
+                <td>73.7</td>
+                <td>24.0</td>
+                <td>7.4</td>
+                <td>62.4</td>
+                <td>58.4</td>
+                <td>14.8</td>
+                <td>4.0</td>
+              </tr>
+              <tr>
+                <td>ER</td>
+                <td>75.2</td>
+                <td>17.6</td>
+                <td>60.6</td>
+                <td>45.0</td>
+                <td>74.4</td>
+                <td>22.8</td>
+                <td>56.2</td>
+                <td>51.8</td>
+              </tr>
+              <tr>
+                <td>Task-MoE</td>
+                <td>84.5</td>
+                <td>15.8</td>
+                <td>71.9</td>
+                <td>64.8</td>
+                <td>72.8</td>
+                <td>12.0</td>
+                <td>63.8</td>
+                <td>57.8</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>SCE</td>
+                <td>86.2</td>
+                <td>4.3</td>
+                <td>82.5</td>
+                <td>83.4</td>
+                <td>69.6</td>
+                <td>0.5</td>
+                <td>70.0</td>
+                <td>73.4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="two-column">
+          <figure class="paper-figure compact">
+            <img src="static/images/realworld_overview_highres.png" alt="Representative real-world manipulation snapshots for three SCE tasks.">
+            <figcaption>
+              Real-world tasks include Box-to-Board, Board-to-Bowl, and Box-to-Bowl manipulation with shared behavioral
+              elements such as object retrieval, transfer, placement, and lid opening.
+            </figcaption>
+          </figure>
+          <div class="table-wrap compact" role="region" aria-label="Real-world results table" tabindex="0">
+            <table>
+              <caption>Real-world continual learning results</caption>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>FWT</th>
+                  <th>NBT</th>
+                  <th>AUC</th>
+                  <th>Final SR</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sequential</td>
+                  <td>56.7</td>
+                  <td>50.0</td>
+                  <td>27.2</td>
+                  <td>6.7</td>
+                </tr>
+                <tr>
+                  <td>ER</td>
+                  <td>53.3</td>
+                  <td>26.7</td>
+                  <td>36.7</td>
+                  <td>20.0</td>
+                </tr>
+                <tr>
+                  <td>Task-MoE</td>
+                  <td>63.3</td>
+                  <td>10.0</td>
+                  <td>57.8</td>
+                  <td>56.7</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td>SCE</td>
+                  <td>83.3</td>
+                  <td>0.0</td>
+                  <td>82.8</td>
+                  <td>83.3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <figure class="paper-figure">
+          <img src="static/images/real_world_success_curve.png" alt="Stage-wise real-world success rates for SCE, Task-MoE, ER, and Sequential.">
+          <figcaption>
+            Stage-wise success rates on the three real-world tasks. Ours denotes SCE, which maintains stronger
+            performance across the real-world continual learning stream.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="videos" class="section section-muted">
+      <div class="container">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Videos</p>
+            <h2>Real-World Video Demos</h2>
+          </div>
+          <p>
+            The videos show successful SCE rollouts and representative failure cases from baseline methods. All videos
+            are played at 2x speed.
+          </p>
+        </div>
+
+        <h3 class="subsection-title">SCE success demos</h3>
+        <div class="video-grid">
+          <article class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="static/videos/SCE_success_demo/SCE_RW-1_Success.mp4" type="video/mp4">
+            </video>
+            <div class="video-card-body">
+              <h3>RW-1: Box-to-Board</h3>
+              <p>SCE moves the block from the box to the wooden board.</p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="static/videos/SCE_success_demo/SCE_RW-2_Success.mp4" type="video/mp4">
+            </video>
+            <div class="video-card-body">
+              <h3>RW-2: Board-to-Bowl</h3>
+              <p>SCE opens the lid and transfers the block from the board into the bowl.</p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="static/videos/SCE_success_demo/SCE_RW-3_Success.mp4" type="video/mp4">
+            </video>
+            <div class="video-card-body">
+              <h3>RW-3: Box-to-Bowl</h3>
+              <p>SCE composes the learned manipulation skills to move the block from the box into the bowl.</p>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="subsection-title">Baseline failure cases</h3>
+        <div class="video-grid failure-grid">
+          <article class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="static/videos/Task_MoE_failure_demo/Task_MoE_RW-2_Failure_Case.mp4" type="video/mp4">
+            </video>
+            <div class="video-card-body">
+              <h3>Task-MoE: RW-2 Failure</h3>
+              <p>
+                The policy hesitates between gripper-state changes and upward motion, causing execution to remain stuck
+                around these actions.
+              </p>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="static/videos/ER_failure_demo/ER_RW-2_Failure_Case.mp4" type="video/mp4">
+            </video>
+            <div class="video-card-body">
+              <h3>ER: RW-2 Failure</h3>
+              <p>
+                Directly introducing previous-task demonstrations can weaken adaptation to the new task, leading to
+                insufficient task execution.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="analysis" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Analysis</p>
+          <h2>Why SCE Works</h2>
+        </div>
+        <div class="analysis-grid">
+          <figure class="paper-figure compact">
+            <img src="static/images/old_task_feature_drift_combo.png" alt="Feature drift analysis under closed-loop control.">
+            <figcaption>
+              SCE reduces old-task feature drift, especially at action-feature levels, and maintains a smaller
+              simulator-state gap during shared-anchor closed-loop rollouts.
+            </figcaption>
+          </figure>
+          <figure class="paper-figure compact">
+            <img src="static/images/skill_transition.png" alt="Adaptive balancing coefficient and transition expert contribution around skill transitions.">
+            <figcaption>
+              Around skill transitions, the adaptive coefficient shifts weight from skill-specific execution toward the
+              transition expert branch for coherent cross-skill behavior.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>SCE project page. Content and results are organized from the paper manuscript.</p>
+      <p>Static layout inspired by clean academic project pages.</p>
+    </div>
+  </footer>
+
+  <script src="static/js/main.js"></script>
+</body>
+</html>
