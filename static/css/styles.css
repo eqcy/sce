@@ -80,15 +80,6 @@ a {
   white-space: nowrap;
 }
 
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(15, 118, 110, 0.24);
-  border-radius: var(--radius);
-  background: var(--accent-soft);
-  object-fit: cover;
-}
-
 .site-nav {
   display: flex;
   flex-wrap: wrap;
@@ -311,14 +302,6 @@ h3 {
   color: var(--soft-text);
 }
 
-.card-index {
-  display: block;
-  margin-bottom: 14px;
-  color: var(--warm);
-  font-size: 0.82rem;
-  font-weight: 850;
-}
-
 .paper-figure {
   margin-top: 26px;
 }
@@ -381,7 +364,7 @@ table {
 }
 
 .compact table {
-  min-width: 520px;
+  min-width: 440px;
 }
 
 caption {
@@ -393,7 +376,7 @@ caption {
 
 th,
 td {
-  padding: 12px 14px;
+  padding: 12px 9px;
   border-top: 1px solid var(--line);
   text-align: right;
   white-space: nowrap;
@@ -470,7 +453,7 @@ thead th {
 
 .analysis-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   align-items: start;
 }
@@ -602,4 +585,8 @@ thead th {
   .button {
     width: 100%;
   }
+}
+
+#analysis .table-wrap {
+  margin-top: 28px;
 }
